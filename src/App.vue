@@ -1,24 +1,34 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
     <transition :name="transitionName">
       <router-view class="router-view" />
     </transition>
+    <!-- 这里的标签名是下面 components 中的名字，也是 import 的名字，可以直接使用(每个单词首字母大小写需和声明的一致)，或使用 - 分隔单词(可将大写改小写，反之不行) -->
+    <nav-bar v-if="isShowNav"></nav-bar>
   </div>
 </template>
 
 <script>
+  // @ 代表 src
+  import navBar from '@/components/NavBar'
   export default {
     data() {
+      // 组件是可复用的实例，不使用 return 包裹的数据在项目全局可见，容易造成数据污染
+      // 使用 return 包裹后的数据变量只在当前组件生效，不影响别的组件
       return {
-        transitionName: 'slide-left'
+        transitionName: 'slide-left',
+        // 因为不是所有的页面都需要导航栏，因此设置 isShowNav 控制导航栏是否显示
+        isShowNav: true,
+        ShowMenuList: ['/', '/home', '/category', '/cart', '/user']
       }
+    },
+    components: {
+      navBar
     },
     watch: {
       $route(to, from) {
+        // 在监听路由变化的时候判断该页面是否需要导航栏，includes 判断数组中是否包含某元素
+        this.isShowNav = this.ShowMenuList.includes(to.path) ? true : false
         if (to.meta.index > from.meta.index) { // 主级页面 到 次级页面 左滑
           this.transitionName = 'slide-left'
         } else if (to.meta.index < from.meta.index) { // 次级页面 到 主级页面 右滑

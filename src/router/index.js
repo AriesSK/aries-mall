@@ -1,27 +1,54 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import Home from '../views/Home.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
+  // 将空路径重定向至 home，防止空页面
   {
     path: '/',
     name: 'home',
-    component: HomeView,
+    redirect: 'home'
+  },
+  {
+    path: '/home',
+    name: 'home',
+    component: Home,
     meta: {
       index: 1 // 设定为第一级
     }
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue'),
+    path: '/category',
+    name: 'category',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Category.vue'),
     meta: {
-      index: 2 // 设定为第二级
+      index: 1
+    }
+  },
+  {
+    path: '/cart',
+    name: 'cart',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Cart.vue'),
+    meta: {
+      index: 1
+    }
+  },
+  {
+    path: '/user',
+    name: 'user',
+    component: () => import(/* webpackChunkName: "about" */ '../views/User.vue'),
+    meta: {
+      index: 1
+    }
+  },
+  {
+    path: '/detail',
+    name: 'detail',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Detail.vue'),
+    meta: {
+      index: 2
     }
   }
 ]
