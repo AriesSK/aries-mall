@@ -4,15 +4,20 @@
     <ul class="nav-list">
       <!-- 默认首页有 active 状态 -->
       <router-link tag="li" class="nav-list-item active" to="home">
+        <!-- 通过在线链接引入 iconfont 的图标 -->
+        <i class="nbicon nblvsefenkaicankaoxianban-1"></i>
         <span>首页</span>
       </router-link>
       <router-link tag="li" class="nav-list-item" to="category">
+        <i class="nbicon nbfenlei"></i>
         <span>分类</span>
       </router-link>
       <router-link tag="li" class="nav-list-item" to="cart">
+        <i class="nbicon nbgouwuche"></i>
         <span>购物车</span>
       </router-link>
       <router-link tag="li" class="nav-list-item" to="user">
+        <i class="nbicon nblvsefenkaicankaoxianban-"></i>
         <span>我的</span>
       </router-link>
     </ul>
@@ -63,7 +68,7 @@
           // active 的元素设置为主题色
           color: @primary;
         }
-        // 斜体标签 <i>
+        // 标签 <i> 用来插入 icon
         i {
           text-align: center;
           font-size: 22px;

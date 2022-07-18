@@ -50,6 +50,14 @@ const routes = [
     meta: {
       index: 2
     }
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue'),
+    meta: {
+      index: 2
+    }
   }
 ]
 
