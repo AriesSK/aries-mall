@@ -5,9 +5,9 @@
       <div class="info">
         <img src="//s.weituibao.com/1583583975067/user-graduate%20(1).png"/>
         <div class="user-desc">
-          <span>昵称：AriesSK</span>
-          <span>登录名：15869111871</span>
-          <span class="name">个性签名：Stay Hungry, Stay Foolish!</span>
+          <span>昵称：{{ user.nickName }}</span>
+          <span>登录名：{{ user.loginName }}</span>
+          <span class="name">个性签名：{{ user.introduceSign }}</span>
         </div>
       </div>
     </div>
@@ -34,10 +34,21 @@
 
 <script>
   import sHeader from '@/components/SimpleHeader'
+  import { getUserInfo } from '@/service/user'
   export default {
     name: 'User',
     components: {
       sHeader
+    },
+    data() {
+      return {
+        user: {}
+      }
+    },
+    // 完成挂载后获取用户信息
+    async mounted() {
+      const { data } = await getUserInfo()
+      this.user = data
     }
   }
 </script>
@@ -64,7 +75,48 @@
         padding: 25px 20px;
         .boxSizing();
         img {
-          
+          .wh(60px, 60px);
+          border-radius: 50%;
+          margin-top: 4px;
+        }
+        .user-desc {
+          display: flex;
+          flex-direction: column;
+          margin-left: 10px;
+          line-height: 20px;
+          font-size: 14px;
+          color: #fff;
+          span {
+            color: #fff;
+            font-size: 14px;
+            padding: 2px 0;
+          }
+        }
+        .account-setting {
+          position: absolute;
+          top: 10px;
+          right: 20px;
+          font-size: 13px;
+          color: #fff;
+          .van-icon-setting-o {
+            font-size: 16px;
+            vertical-align: -3px;
+            margin-right: 4px;
+          }
+        }
+      }
+    }
+    .user-list {
+      padding: 0 20px;
+      margin-top: 20px;
+      li {
+        height: 40px;
+        line-height: 40px;
+        border-bottom: 1px solid #e9e9e9;
+        .fj();
+        font-size: 14px;
+        .van-icon-arrow {
+          margin-top: 13px;
         }
       }
     }

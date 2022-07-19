@@ -81,7 +81,12 @@
   box-sizing: border-box;
 }
 
-// flex 布局和子元素对齐方式，默认均匀排列每个子元素
+// 设置 display: flex 布局后，通过 justify-contnent 调整子元素整体的布局
+// flex-start 默认值，在主轴的左边
+// flex-end 在主轴右边位置
+// center 在主轴中心位置
+// space-around 将主轴的剩余空间平均分配，子元素间距相同，首尾元素与边界距离是间距的一半
+// space-between 同上，但首尾元素紧贴边界
 .fj(@type: space-between){
   display: flex;
   justify-content: @type;

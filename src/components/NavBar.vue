@@ -63,7 +63,7 @@
         // 水平居中
         text-align: center;
         color: #666;
-        // & 是父级的引用，这里指 nav-list，当 router-link 标签被选中时会自动给标签添加一个 router-link-active 的 class，因此可以设置样式
+        // & 是父级的引用，指向父元素自身，这里指 nav-list-item，当 router-link 标签被选中时会自动给标签添加一个 router-link-active 的 class，因此可以设置样式
         &.router-link-active {
           // active 的元素设置为主题色
           color: @primary;

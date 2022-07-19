@@ -52,6 +52,13 @@
   }
 
   #nav {
+    // position 的五种属性：static、absolute、relative、fixed、inherit
+    // static 默认值，屋顶为，元素正常处于文档流
+    // absolute 绝对定位，相对于最近的一个非 static 定位的祖先元素定位，使用 left、top、right、bottom 设定位置
+    // relative 相对定位，相对于元素本身正常的位置定位
+    // fixed 绝对定位，相对于浏览器窗口定位
+    // inherit 继承父元素的 position 属性
+    // 绝对定位的元素具备行内块的特点，不设置宽高则由内容撑开
     position: absolute;
     top: 0;
     left: 50%;
