@@ -1,6 +1,17 @@
+<!-- 
+  记录一下 v-bind 的用法，在双引号中的内容，有单引号的表示值，无单引号的表示变量：
+  1. 动态绑定属性，比如 <img :src="imgURL">，其中 imgURL 在 data 中声明，并且是直接使用，而不是 mustache 语法 <img :src="{{imgRUL}}">
+  2. 向组件传递 props，比如 <swiper :list="swiperList"></swiper>
+  3. 动态绑定 class
+    3.1 对象语法，class 后面跟的是一个对象，<div :class="类名: boolean"></div>，当 boolean 值为 true 时，改类就会被添加
+    3.2 数组语法，class 后面跟的是一个数组，<div :class="[active, line]"></div>
+  4. 动态绑定 style，<div :style="[属性名: 属性值]"></div>
+  下面的代码中有用到这些用法，具体可看注释
+ -->
 <template>
   <div class="home">
-    <header class="home-header wrap">
+    <!-- 用法 3.1 -->
+    <header class="home-header wrap" :class="{ 'active': headerScroll }">
       <!-- tag 表示将 router-link 渲染成什么标签 -->
       <router-link tag="i" to="./category"><i class="nbicon nbmenu2"></i></router-link>
       <div class="header-search">
@@ -14,9 +25,11 @@
       </router-link>
     </header>
     <!-- 外部传入轮播图 url 的列表 -->
+    <!-- 用法 2 -->
     <swiper :list="swiperList"></swiper>
     <!-- v-for 中使用 key 能够提升渲染的效率，比如在修改列表数据时，根据 key 判断是否需要重新渲染 -->
     <div class="category-list">
+      <!-- 用法 1 -->
       <div v-for="item in categoryList" :key="item.categoryId">
         <img :src="item.imgUrl">
         <span>{{ item.name }}</span>
@@ -25,18 +38,9 @@
     <div class="good">
       <header class="good-header">新品上线</header>
       <div class="good-box">
-        <div class="good-item" v-for="item in hots" :key="item.goodsId" @click="goToDetail(item)">
-          <!--  -->
-          <img :src="`//api.newbee.ltd${item.goodsCoverImg}`">
-          <div class="price">¥ {{ item.sellingPrice }}</div>
-        </div>
-      </div>
-    </div>
-    <div class="good">
-      <header class="good-header">热门商品</header>
-      <div class="good-box">
-        <div class="good-item" v-for="item in hots" :key="item.goodsId" @click="goToDetail(item)">
-          <img :src="`//api.newbee.ltd${item.goodsCoverImg}`">
+        <div class="good-item" v-for="item in newGoodses" :key="item.goodsId" @click="goToDetail(item)">
+          <!-- ${} 是 es6 的新增字符串方法，配合单反引号实现字符串的拼接功能，比如 `//api.newbee.ltd${item.goodsCoverImg}`-->
+          <img :src="item.goodsCoverImg">
           <div class="good-desc">
             <div class="title">{{ item.goodsName }}</div>
             <div class="price">¥ {{ item.sellingPrice }}</div>
@@ -44,11 +48,24 @@
         </div>
       </div>
     </div>
-    <div class="good" :style="{ paddingBottom: '100px'}">
+    <div class="good">
+      <header class="good-header">热门商品</header>
+      <div class="good-box">
+        <div class="good-item" v-for="item in hots" :key="item.goodsId" @click="goToDetail(item)">
+          <img :src="item.goodsCoverImg">
+          <div class="good-desc">
+            <div class="title">{{ item.goodsName }}</div>
+            <div class="price">¥ {{ item.sellingPrice }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 用法 4，这里 paddingBottom 没单引号，是个变量 -->
+    <div class="good" :style="{ paddingBottom: '100px' }">
       <header class="good-header">最新推荐</header>
       <div class="good-box">
         <div class="good-item" v-for="item in recommends" :key="item.goodsId" @click="goToDetail(item)">
-          <img :src="`//api.newbee.ltd${item.goodsCoverImg}`">
+          <img :src="item.goodsCoverImg">
           <div class="good-desc">
             <div class="title">{{ item.goodsName }}</div>
             <div class="price">¥ {{ item.sellingPrice }}</div>
@@ -113,13 +130,19 @@
           }
         ],
         isLogin: false,
-        swiperList: []
+        swiperList: [],
+        hots: [],
+        newGoodses: [],
+        recommends: [],
+        headerScroll: false
       }
     },
     components: {
       swiper
     },
     async mounted() {
+      // 监听 scroll 滚动事件
+      window.addEventListener('scroll', this.pageScroll)
       // 通过获取 token 判断是否已登录
       const token = getLocal('token')
       if (token) {
@@ -133,6 +156,29 @@
       const { data } = await getHome()
       // 获取轮播图 url 列表
       this.swiperList = data.carousels
+      // 获取新品列表
+      this.newGoodses = data.newGoodses
+      // 获取热门列表
+      this.hots = data.hotGoodses
+      // 获取推荐列表
+      this.recommends = data.recommendGoodses
+      // 处理其中几张网址不同的图
+      for (const i of this.recommends) {
+        if (i.goodsCoverImg.charAt(0) == "/") {
+          i.goodsCoverImg = "http://backend-api-01.newbee.ltd" + i.goodsCoverImg
+        }
+      }
+      // 在数据获取完后将 Toast 弹窗关闭
+      Toast.clear()
+    }, 
+    methods: {
+      pageScroll() {
+        // 获取文档基于窗口左上角垂直方向滚动的像素
+        // 三种用法等价，但考虑到兼容性问题，获取到任意一种均可
+        let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+        // 如果文档基于窗口左上角已经垂直方向滚动了超过 100 像素，则调整搜索框背景为主题色，避免遇到白色背景时出现重叠
+        this.headerScroll = scrollTop > 100 ? true : false
+      }
     }
   }
 </script>
@@ -155,7 +201,7 @@
       .nbmenu2 {
         color: @primary;
       }
-      // 等同于 home-header.active 交集选择器，当轮播图滚动到可视区域外时，改变搜索框背景颜色
+      // 等同于 home-header.active 交集选择器，当轮播图滚动到可视区域外时，改变搜索框背景和图标颜色
       &.active {
         background: @primary;
         .nbmenu2 {
@@ -220,6 +266,49 @@
         img {
           .wh(40px, 40px);
           margin: 13px auto 8px auto;
+        }
+      }
+    }
+    .good {
+      .good-header {
+        background: #f9f9f9;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        color: @primary;
+        font-size: 16px;
+        font-weight: 500;
+      }
+      .good-box {
+        display: flex;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        .good-item {
+          box-sizing: border-box;
+          width: 50%;
+          border-bottom: 1PX solid #e9e9e9;
+          padding: 10px 0;
+          img {
+            // 显示为块级元素
+            display: block;
+            width: 120px;
+            margin: 0 auto;
+          }
+          .good-desc {
+            text-align: center;
+            font-size: 14px;
+            padding: 10px 0;
+            .title {
+              color: #222333;
+            }
+            .price {
+              color: @primary;
+            }
+          }
+          // 伪类，表示奇数的子节点
+          &:nth-child(2n + 1) {
+            border-right: 1PX solid #e9e9e9;
+          }
         }
       }
     }
