@@ -15,7 +15,7 @@
   export default {
     props: {
       /**
-       * 节流：一个函数执行一次后，只有在大于设定的执行周期后才能执行第二次，类似技能冷却，常用于上拉加载、滚动条等
+       * 节流：一个函数执行一次后，只有在大于设定的执行周期后才能执行第二次，类似技能冷却，常用于上拉加载、滚动条等，可以通过 setTimeout(执行的函数, 时间) 实现
        * 0 表示不派发 scroll 事件
        * 1 表示滚动时会派发 scroll 事件，会节流
        * 2 表示滚动实时派发 scroll 事件，不会节流
@@ -67,10 +67,21 @@
       }
     },
     mounted() {
-      // DOM 渲染完毕后初始化 better-scroll，等待为了确保 DOM 渲染完毕
-      setTimeout(() => {
+      /**
+       * 使用 nextTick 异步调用，保证 DOM 渲染完毕后再初始化 better-scroll
+       * 然而这里虽然使用了异步调用，但还是没法保证 better-scroll 的正确滚动
+       * 这是因为父组件与子组件的生命周期执行顺序是*父 created - 父 beforeMounted - 子 created - 子 beforeMounted - 子 mounted - 父 mounted*
+       * 因此在 better-scroll 完成初始化后，父组件中又会调用接口获取数据改变 content 的内容和高度，也改变了 DOM 结构，导致无法正确滚动
+       * 因此需要利用 update 和 scroll.refresh 重新计算
+       */ 
+      this.$nextTick(() => {
         this.initScroll()
-      }, 20)
+      })
+    },
+    // 由于数据更改导致 DOM 重新渲染时调用
+    updated() {
+      // better-scroll 的 refresh 方法，用于重新计算 bttter-scroll，在 DOM 结构发生变化的时候调用保证滚动效果正常
+      this.scroll.refresh()
     },
     methods: {
       initScroll() {
@@ -137,15 +148,6 @@
       scrollToElement() {
         // 代理 better-scroll 的 scrollToElement 方法
         this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments)
-      }
-    },
-    watch: {
-      // 监听数据的变化，重新计算高度
-      data() {
-        // 节流
-        setTimeout(() => {
-          this.refresh()
-        }, this.refreshDelay)
       }
     }
   }

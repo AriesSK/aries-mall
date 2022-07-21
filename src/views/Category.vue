@@ -1,3 +1,9 @@
+<!-- 
+  better-scroll 的实现原理是*第一个*子元素 content 的高度超过父元素 wrapper 的时候，才可以实现滚动，因此必须要为 wrapper 设置高度
+  这里是将浏览器的视口高度 - 100px 设置为 wrapper 的高度，而 content 的高度则由内部的内容撑开
+  **在 better-scroll 初始化的时候，会计算父元素和子元素的高度和宽度来决定是否可以纵向和横向滚动，因此要确保它们已经渲染完成再初始化
+  **在 DOM 结构发生改变的时候，需要调用 scroll.refresh() 方法重新计算来确保滚动效果的正常
+ -->
 <template>
   <div class="category-box">
     <header class="category-header wrap">
@@ -11,7 +17,8 @@
     <!-- 左侧一级分类 -->
     <div class="search-wrap" ref="searchWrap">
       <!-- 传入 scrollData -->
-      <list-scroll v-if="categoryData.length" :scroll-data="categoryData" class="nav-side-wrapper">
+      <!-- better-scroll 需要等待 DOM 加载完成后才能正确应用 -->
+      <list-scroll :scroll-data="categoryData" class="nav-side-wrapper">
         <ul class="nav-side">
           <!-- v-text 设置标签的内容 -->
           <!-- 被选中的标签根据 categoryId 设置为 active -->
@@ -20,8 +27,7 @@
       </list-scroll>
       <!-- 中间二三级分类 -->
       <div class="search-content">
-        <!-- 等数据加载完再计算？ -->
-        <list-scroll v-if="categoryData.length" :scroll-data="categoryData">
+        <list-scroll :scroll-data="categoryData">
           <div class="swiper-container">
             <div class="swiper-wrapper">
               <template v-for="(category, index) in categoryData">
@@ -68,12 +74,15 @@
         this.currentIndex = index
       },
       selectProduct(item) {
+        // ${} 是 es6 的新增字符串方法，配合单反引号实现字符串的拼接功能-->
+        // 使用 router.push 方法会跳转到新页面并且向 history 栈中添加一个新纪录，这里还通过路由传参 categoryId，可以在跳转的页面使用 this.$route.categoryId 获取
         this.$router.push({ path: `product-list?categoryId=${item.categoryId}` })
       },
       setWrapHeight() {
-        // 设置视口(浏览器的可视区域)高度
+        // 获取视口(浏览器的可视区域)高度
         let $screenHeight = document.documentElement.clientHeight
-        this.$refs.searchWrap.style.height = $screenHeight -100 + 'px'
+        // 根据视口高度设置 better-scroll 父容器 wrapper 的高度
+        this.$refs.searchWrap.style.height = $screenHeight - 100 + 'px'
       }
     }
   }

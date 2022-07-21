@@ -4,3 +4,8 @@ import axios from '../utils/axios'
 export function getCategory() {
   return axios.get('/categories')
 }
+
+// 搜索商品接口
+export function search(params) {
+  return axios.get('/search', { params })
+}

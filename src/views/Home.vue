@@ -39,7 +39,6 @@
       <header class="good-header">新品上线</header>
       <div class="good-box">
         <div class="good-item" v-for="item in newGoodses" :key="item.goodsId" @click="goToDetail(item)">
-          <!-- ${} 是 es6 的新增字符串方法，配合单反引号实现字符串的拼接功能，比如 `//api.newbee.ltd${item.goodsCoverImg}`-->
           <img :src="item.goodsCoverImg">
           <div class="good-desc">
             <div class="title">{{ item.goodsName }}</div>
