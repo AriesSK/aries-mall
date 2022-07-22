@@ -66,11 +66,29 @@ const routes = [
     meta: {
       index: 2
     }
+  },
+  {
+    path: '/product/:id',
+    name: 'product',
+    component: () => import(/* webpackChunkName: "product" */ '../views/ProductDetail.vue'),
+    meta: {
+      index: 3
+    }
   }
 ]
 
 const router = new VueRouter({
-  routes
+  routes,
+  // scrollBehavior 可以自定义滚动行为
+  scrollBehavior (to, from, savedPosition) {
+    if (savedPosition) {
+      // 若回退页面，则返回 savedPosition，不需要滚动至页面顶部
+      return savedPosition
+    } else {
+      // 若跳转新页面，滚动至页面顶部
+      return { x: 0, y: 0 }
+    }
+  }
 })
 
 export default router

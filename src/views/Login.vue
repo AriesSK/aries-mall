@@ -73,7 +73,7 @@ export default {
         return
       }
       if (this.type == 'login') {
-        // 发送 json 形式的数据包，返回数据同样是 json 形式
+        // 发送 json 形式的数据包，返回数据同样是 json 形式，json 形式属性是字符串，属性值是字符串、数、布尔值或 json
         const { data, resultCode } = await login({
           "loginName": values.username,
           "passwordMd5": this.$md5(values.password)

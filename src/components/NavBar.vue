@@ -13,7 +13,7 @@
         <span>分类</span>
       </router-link>
       <router-link tag="li" class="nav-list-item" to="cart">
-        <i class="nbicon nbgouwuche"></i>
+        <van-icon name="shopping-cart-o" :info="!count ? '' : count"/>
         <span>购物车</span>
       </router-link>
       <router-link tag="li" class="nav-list-item" to="user">
@@ -25,9 +25,24 @@
 </template>
 
 <script>
+  import { getLocal } from '@/common/js/utils'
   // export 导出一个模块，在其它地方通过 import 导入
   export default {
-
+    mounted() {
+      const token = getLocal('token')
+      if (token) {
+        this.$store.dispatch('updateCart')
+      }
+    },
+    data() {
+      return {}
+    },
+    computed: {
+      // 监听 cartCount 的变化实时变更购物车数量
+      count() {
+        return this.$store.state.cartCount
+      }
+    }
   }
 </script>
 
@@ -75,6 +90,10 @@
         }
         span {
           font-size: 12px;
+        }
+        .van-icon-shopping-cart-o {
+          margin: 0 auto;
+          margin-bottom: 2px;
         }
       }
     }

@@ -25,7 +25,7 @@
     <!-- v-model 值表示是否处在加载状态，在加载状态*不触发* load 事件，组件滚动到底部会触发 load 事件并将 loading 设为 true -->
     <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" @offset="300">
       <div class="product-item" v-for="(item, index) in productList" :key="index" @click="productDetail(item)">
-        <img :src="`//backend-api-01.newbee.ltd${item.goodsCoverImg}`"/>
+        <img :src="item.goodsCoverImg"/>
         <div class="product-info">
           <!-- p 块，span 行内，显示文字 -->
           <p class="name">{{ item.goodsName }}</p>
@@ -63,7 +63,7 @@
     methods: {
       async init() {
         // const { a } = this.b 是 es6 的解构语法，等同于 const a = this.b.a
-        // 通过路由传参获取商品分类号 categoryId 的值，是从 Category 页面传过来的
+        // 通过路由传参获取商品分类号 categoryId 的值，是从 Category 页面传过来的，使用 query 传参
         const { categoryId, from } = this.$route.query
         // 两者均为空，不进行搜索
         if (!categoryId && !this.keyword) {
@@ -74,6 +74,7 @@
         // 根据 categoryId 或 keyword 搜索商品列表
         // 获取 data 和 data.list
         const { data, data: { list } } = await search({
+          // 设置请求参数，参数名: 参数值
           pageNumber: this.page,
           goodCategoryId: categoryId,
           keyword: this.keyword,
@@ -81,6 +82,11 @@
         })
         // 将不同页的数据拼接
         this.productList = this.productList.concat(list)
+        for (const i of this.productList) {
+          if (i.goodsCoverImg.charAt(0) == "/") {
+            i.goodsCoverImg = "http://backend-api-01.newbee.ltd" + i.goodsCoverImg
+          }
+        }
         this.totalPage = data.totalPage
         // 因为前面触发 load 事件后 loading 被设为了 true，此状态下无法再触发 load 事件，因此需要恢复设置
         this.loading = false

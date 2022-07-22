@@ -177,6 +177,9 @@
         let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
         // 如果文档基于窗口左上角已经垂直方向滚动了超过 100 像素，则调整搜索框背景为主题色，避免遇到白色背景时出现重叠
         this.headerScroll = scrollTop > 100 ? true : false
+      },
+      goToDetail(item) {
+        this.$router.push({ path: `product/${item.goodsId}` })
       }
     }
   }
