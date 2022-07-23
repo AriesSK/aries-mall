@@ -13,6 +13,7 @@
         <span>分类</span>
       </router-link>
       <router-link tag="li" class="nav-list-item" to="cart">
+        <!-- info 属性是用来设置图标右上角红点的显示内容，这里显示购物车中的商品数量 -->
         <van-icon name="shopping-cart-o" :info="!count ? '' : count"/>
         <span>购物车</span>
       </router-link>

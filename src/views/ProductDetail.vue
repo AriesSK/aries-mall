@@ -73,7 +73,8 @@
       goTo() {
         this.$router.push({ path: '/cart' })
       },
-      // 添加购物车和立即购买均需要调用全局状态
+      // 添加购物车和立即购买均调用接口使后台的购物车商品数加一并记录商品 id，然后需要修改全局状态中的购物车数量
+      // 修改状态过程：通过 dispatch 调用 action，action 通过 commit 提交 mutation，mutation 直接修改 state
       async addCart() {
         // 添加购物车
         const { data, resultCode } = await addCart({
@@ -81,6 +82,7 @@
           "goodsId": this.detail.goodsId
         })
         if (resultCode == 200 ) Toast.success('添加成功')
+        // 调用 action，参数是 action 的名字
         this.$store.dispatch('updateCart')
       },
       async goToCart() {
@@ -93,8 +95,15 @@
         this.$router.push({ path: '/cart' })
       }
     },
+    /**
+     * computed 是 vue 的计算属性，根据依赖关系进行缓存的计算，只有在相关依赖发生改变时才会进行更新
+     * 响应式依赖(缓存)：computed 中的每一个计算属性都会被缓存起来，只要计算属性依赖的属性发生变化，计算属性就会重新执行，视图也会更新，比如计算属性 c = a + b，a 或 b 的变化均会使 c 重新计算
+     * 可以使用 computed 来计算受多个属性影响的属性
+     * 也可以用来监听 Vuex 中的状态，实现实时的全局更新
+     */
     computed: {
       count() {
+        // 默认使用 getter 属性
         return this.$store.state.cartCount
       }
     }
