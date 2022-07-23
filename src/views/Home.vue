@@ -1,4 +1,5 @@
 <!-- 
+  v-bind 只能将 vue 中的数据同步到页面中，v-model 还可以将页面的数据赋给 vue 中的属性，但 v-model 只能绑定有 value 属性的元素
   记录一下 v-bind 的用法，在双引号中的内容，有单引号的表示值，无单引号的表示变量：
   1. 动态绑定属性，比如 <img :src="imgURL">，其中 imgURL 在 data 中声明，并且是直接使用，而不是 mustache 语法 <img :src="{{imgRUL}}">
   2. 向组件传递 props，比如 <swiper :list="swiperList"></swiper>
@@ -39,7 +40,7 @@
       <header class="good-header">新品上线</header>
       <div class="good-box">
         <div class="good-item" v-for="item in newGoodses" :key="item.goodsId" @click="goToDetail(item)">
-          <img :src="item.goodsCoverImg">
+          <img :src="item.goodsCoverImg"/>
           <div class="good-desc">
             <div class="title">{{ item.goodsName }}</div>
             <div class="price">¥ {{ item.sellingPrice }}</div>
