@@ -74,6 +74,14 @@ const routes = [
     meta: {
       index: 3
     }
+  },
+  {
+    path: '/create-order',
+    name: 'create-order',
+    component: () => import(/* webpackChunkName: "create-order" */ '../views/CreateOrder.vue'),
+    meta: {
+      index: 2
+    }
   }
 ]
 

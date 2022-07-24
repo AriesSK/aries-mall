@@ -119,8 +119,9 @@
         // 选中商品的列表赋值
         this.result = result
       },
+      // 提交选中商品，进入订单页面，注意在本页面不能删除这些商品，要等订单完成后才能删除
       async onSubmit() {
-        // 提交选中商品，进入订单页面，注意在本页面不能删除这些商品，要等订单完成后才能删除
+        // 将 JavaScript 对象或值转化为 JSON 字符串
         const params = JSON.stringify(this.result)
         this.$router.push({ path: `create-order?cartItemIds=${params}` })
       },

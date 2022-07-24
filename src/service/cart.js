@@ -8,20 +8,24 @@ import axios from '../utils/axios'
 
 // 添加购物车
 export function addCart(params) {
-  return axios.post('/shop-cart', params);
+  return axios.post('/shop-cart', params)
 }
 
 // 获取购物车信息
 export function getCart(params) {
-  return axios.get('/shop-cart', { params });
+  return axios.get('/shop-cart', { params })
 }
 
 // 删除购物车商品
 export function deleteCartItem(id) {
-  return axios.delete(`/shop-cart/${id}`);
+  return axios.delete(`/shop-cart/${id}`)
 }
 
 // 修改购物车商品数量
 export function modifyCart(params) {
-  return axios.put('/shop-cart', params);
+  return axios.put('/shop-cart', params)
+}
+
+export function getByCartItemIds(params) {
+  return axios.get('/shop-cart/settle', {params})
 }

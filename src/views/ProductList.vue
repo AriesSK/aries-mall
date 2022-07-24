@@ -72,7 +72,7 @@
           return
         }
         // 根据 categoryId 或 keyword 搜索商品列表
-        // 获取 data 和 data.list
+        // 获取 data 和 data.list，const { list } = data
         const { data, data: { list } } = await search({
           // 设置请求参数，参数名: 参数值
           pageNumber: this.page,

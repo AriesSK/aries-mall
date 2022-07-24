@@ -32,7 +32,7 @@
     <!-- Vant 的电商专用组件 -->
     <van-goods-action>
       <van-goods-action-icon icon="chat-o" text="客服"/>
-      <van-goods-action-icon icon="cart-o" :info="!count ? '' : count" @click="goTo()" text="购物车"/>
+      <van-goods-action-icon icon="cart-o" :badge="!count ? '' : count" @click="goTo()" text="购物车"/>
       <van-goods-action-button type="warning" @click="addCart" text="加入购物车"/>
       <van-goods-action-button type="danger" @click="goToCart" text="立即购买"/>
     </van-goods-action>

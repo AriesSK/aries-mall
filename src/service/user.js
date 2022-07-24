@@ -8,15 +8,15 @@ export function getUserInfo() {
 // 登录接口
 // axios.js 配置了 post 请求发送 json 参数，请求 json 参数时 params 不需要加 {}
 export function login(params) {
-    return axios.post('user/login', params);
+    return axios.post('user/login', params)
 }
 
 // 注销接口
 export function logout() {
-    return axios.post('/user/logout');
+    return axios.post('/user/logout')
 }
 
 // 注册接口
 export function register(params) {
-    return axios.post('user/register', params);
+    return axios.post('user/register', params)
 }
