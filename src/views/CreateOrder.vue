@@ -3,7 +3,7 @@
     <s-header :title="'生成订单'"></s-header>
     <div class="address-wrap">
       <div class="name" @click="goTo">
-        <span>{{ address.userName }}</span>
+        <span>{{ address.userName }} </span>
         <span>{{ address.userPhone }}</span>
       </div>
       <div class="address">
@@ -39,7 +39,7 @@
 <script>
   import sHeader from '@/components/SimpleHeader'
   import { getByCartItemIds } from '../service/cart'
-  import { getAddressDetial, getDefaultAddress } from '../service/address'
+  import { getAddressDetail, getDefaultAddress } from '../service/address'
   import { setLocal, getLocal } from '@/common/js/utils'
   import { Toast } from 'vant'
   export default {
@@ -48,7 +48,8 @@
     },
     data() {
       return {
-        cartList: []
+        cartList: [],
+        address: {}
       }
     },
     mounted() {
@@ -66,8 +67,8 @@
         // cartItemIds 是数组，使用 join 连接成字符串
         // 这里将返回对象中的属性 data 的值赋给了新的变量 list
         const { data: list } = await getByCartItemIds({ cartItemIds: _cartItemIds.join(',')})
-        // 有 addressId 优先获取，没有则获取默认地址，若默认地址也没有则说明还未设置地址，跳转至地址管理
-        const { data: address } = addressId ? await getAddressDetial(addressId) : await getDefaultAddress()
+        // 有 addressId 优先获取(从地址栏页面选完地址后返回)，没有则获取默认地址(直接进入确认订单页面)，若默认地址也没有则说明还未设置地址，跳转至地址管理
+        const { data: address } = addressId ? await getAddressDetail(addressId) : await getDefaultAddress()
         if (!address) {
           this.$router.push({ path: 'address' })
           return

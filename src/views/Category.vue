@@ -74,7 +74,7 @@
         this.currentIndex = index
       },
       selectProduct(item) {
-        // ${} 是 es6 的新增字符串方法，配合单反引号实现字符串的拼接功能-->
+        // ${} 是 es6 的新增字符串方法，配合单反引号实现字符串的拼接功能，在标签中只有被 v-bind 绑定的属性才能使用 -->
         // 使用 router.push 方法会跳转到新页面并且向 history 栈中添加一个新纪录，这里还通过路由传参 categoryId，可以在跳转的页面使用 this.$route.query.categoryId 获取
         this.$router.push({ path: `product-list?categoryId=${item.categoryId}` })
       },
