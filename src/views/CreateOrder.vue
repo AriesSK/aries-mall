@@ -31,17 +31,26 @@
         <!-- 计算属性 total 未定义在 data 中，定义在 computed 中也可以直接获取 -->
         <span>¥{{ total }}</span>
       </div>
-      <van-button class="pay-btn" color="#1baeae" type="primary" block>生成订单</van-button>
+      <van-button @click="createOrder" class="pay-btn" color="#1baeae" type="primary" block>生成订单</van-button>
     </div>
+    <!-- closeable 是否显示关闭图标，close-on-click-overlay 是否在点击遮罩层后关闭，v-model 控制当前组件是否显示，position 弹出位置，close 事件关闭弹出层触发 -->
+    <!-- close-on-click-overlay 需要 v-bind 传参，因为传的是 boolean 类型的参数，如果不使用 v-bind 会被当做字符串传递，使用则会被当作 js 表达式处理 -->
+    <van-popup closeable :close-on-click-overlay="false" v-model="showPay" position="bottom" :style="{ height: '30%'}" @close="close">
+      <div :style="{ width: '90%', margin: '0 auto', padding: '50px 0' }">
+        <van-button :style="{ marginBottom: '10px' }" color="#1989fa" block @click="payOrder(1)">支付宝支付</van-button>
+        <van-button color="#4fc08d" block @click="payOrder(2)">微信支付</van-button>
+      </div>
+    </van-popup>
   </div>
 </template>
 
 <script>
   import sHeader from '@/components/SimpleHeader'
-  import { getByCartItemIds } from '../service/cart'
+  import { getCart, getByCartItemIds } from '../service/cart'
   import { getAddressDetail, getDefaultAddress } from '../service/address'
   import { setLocal, getLocal } from '@/common/js/utils'
   import { Toast } from 'vant'
+import { createOrder, payOrder } from '@/service/order'
   export default {
     components: {
       sHeader
@@ -49,7 +58,10 @@
     data() {
       return {
         cartList: [],
-        address: {}
+        address: {},
+        showPay: false,
+        orderNo: '',
+        cartItemIds: []
       }
     },
     mounted() {
@@ -61,7 +73,7 @@
         // 路由传参
         const { addressId, cartItemIds } = this.$route.query
         // 将 JSON 字符串转换为 JavaScript 对象或值
-        // 有路由传值获取路由传值，没有则获取本地存储的值
+        // 有路由传值获取路由传值，没有则获取本地存储的值（某些操作可能导致浏览器地址参数丢失）
         const _cartItemIds = cartItemIds ? JSON.parse(cartItemIds) : JSON.parse(getLocal('cartItemIds'))
         setLocal('cartItemIds', JSON.stringify(_cartItemIds))
         // cartItemIds 是数组，使用 join 连接成字符串
@@ -73,6 +85,7 @@
           this.$router.push({ path: 'address' })
           return
         }
+        // 获取购物车中商品信息和用户地址信息用于订单详情的展示
         this.cartList = list
         this.address = address
         for (const i of this.cartList) {
@@ -84,6 +97,31 @@
       },
       goTo() {
         this.$router.push({ path: `address?cartItemIds=${JSON.stringify(this.cartItemIds)}` })
+      },
+      // 清除本地的购物车商品 id
+      deleteLocal() {
+        setLocal('carItemIds', '')
+      },
+      async createOrder() {
+        const params = {
+          addressId: this.address.addressId,
+          cartItemIds: this.cartList.map(item => item.cartItemId)
+        }
+        const { data, resultCode } = await createOrder(params)
+        // 成功创建订单后清空本地购物车商品 id，获取订单号，显示支付弹窗
+        this.deleteLocal()
+        this.orderNo = data
+        this.showPay = true
+      },
+      close() {
+        // 取消支付跳转至我的订单页面
+        this.$router.push({ path: 'order' })
+      },
+      async payOrder(type) {
+        // 根据支付方式支付订单，随后跳转至我的订单页面
+        Toast.loading
+        await payOrder({ orderNo: this.orderNo, payType: type })
+        this.$router.push({ path: 'order' })
       }
     },
     computed: {
