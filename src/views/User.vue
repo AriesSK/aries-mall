@@ -12,32 +12,35 @@
       </div>
     </div>
     <ul class="user-list">
-      <li>
+      <li @click="goTo('order')">
         <span>我的订单</span>
         <van-icon name="arrow"/>
       </li>
-      <li>
+      <li @click="goTo('setting')">
         <span>账号管理</span>
         <van-icon name="arrow"/>
       </li>
-      <li>
+      <li @click="goTo('address?from=mine')">
         <span>地址管理</span>
         <van-icon name="arrow"/>
       </li>
-      <li>
+      <li @click="goTo('about')">
         <span>关于我们</span>
         <van-icon name="arrow"/>
       </li>
     </ul>
+    <nav-bar></nav-bar>
   </div>
 </template>
 
 <script>
+  import navBar from '@/components/NavBar'
   import sHeader from '@/components/SimpleHeader'
   import { getUserInfo } from '@/service/user'
   export default {
     name: 'User',
     components: {
+      navBar,
       sHeader
     },
     data() {
@@ -49,6 +52,14 @@
     async mounted() {
       const { data } = await getUserInfo()
       this.user = data
+    },
+    methods: {
+      goBack() {
+        this.$router.go(-1)
+      },
+      goTo(r) {
+        this.$router.push({ path: r})
+      }
     }
   }
 </script>
@@ -56,11 +67,28 @@
 <style lang="less" scoped>
   @import '../common/style/mixin';
   .user-box {
+    .user-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10000;
+      .fj();
+      .wh(100%, 44px);
+      line-height: 44px;
+      padding: 0 10px;
+      .boxSizing();
+      color: #252525;
+      background: #fff;
+      border-bottom: 1px solid #dcdcdc;
+      .user-name {
+        font-size: 14px;
+      }
+    }
     .user-info {
       width: 94%;
       margin: 10px;
       height: 115px;
-      // linear-gradient 线性渐变，参数：渐变方向 起始颜色 重点颜色，其中渐变方向 90deg 表示从左到右，270deg 从右到左，0deg 表示从下到上，180deg 从上到下(默认)
+      // linear-gradient 线性渐变，参数：渐变方向 起始颜色 终点颜色，其中渐变方向 90deg 表示从左到右，270deg 从右到左，0deg 表示从下到上，180deg 从上到下(默认)
       background: linear-gradient(90deg, @primary, #51c7c7);
       // 阴影效果，参数：x坐标值 y坐标值 模糊程度 颜色
       box-shadow: 0 2px 5px #269090;

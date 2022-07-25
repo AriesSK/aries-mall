@@ -106,6 +106,14 @@ const routes = [
     meta: {
       index: 2
     }
+  },
+  {
+    path: '/setting',
+    name: 'setting',
+    component: () => import(/* webpackChunkName: "setting" */ '../views/Setting.vue'),
+    meta: {
+      index: 2
+    }
   }
 ]
 

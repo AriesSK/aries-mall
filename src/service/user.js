@@ -20,3 +20,7 @@ export function logout() {
 export function register(params) {
     return axios.post('user/register', params)
 }
+
+export function EditUserInfo(params) {
+    return axios.put('/user/info', params)
+}

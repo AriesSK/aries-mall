@@ -39,7 +39,29 @@
           nickNmae: this.nickName,
           passwordMd5: this.$md5(this.password)
         }
+        const { data } = await  EditUserInfo(params)
+        Toast.success('保存成功')
+      },
+      async logout() {
+        const { resultCode } = await logout()
+        if (resultCode == 200) {
+          setLocal('token', '')
+          // 这种跳转方式会刷新页面，而 push 不刷新，静态跳转
+          window.location.href = '/'
+        }
       }
     }
   }
 </script>
+
+<style lang="less" scoped>
+  .setting-box {
+    .input-item {
+      margin-top: 44px;
+    }
+    .save-btn {
+      width: 80%;
+      margin: 20px auto;
+    }
+  }
+</style>
