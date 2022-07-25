@@ -3,6 +3,7 @@
     <s-header :title="'地址管理'" :back="'/user'"></s-header>
     <div class="address-item">
       <!-- v-model 当前选中的地址 id，list 地址列表，default-tag-text 默认地址标签文字，add 事件点击新增按钮触发，edit 事件点击编辑按钮触发，select 切换选中地址触发 -->
+      <!-- 如果从订单跳转过来需要选择地址，而从我的主页跳转过来则不需要 -->
       <van-address-list v-if="from != 'mine'" v-model="chosenAddressId" :list="list" default-tag-text="默认" @add="onAdd" @edit="onEdit" @select="select"/>
       <van-address-list v-else v-model="chosenAddressId" :list="list" default-tag-text="默认" @add="onAdd" @edit="onEdit"/>
     </div>
