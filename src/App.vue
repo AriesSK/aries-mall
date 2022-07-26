@@ -1,7 +1,12 @@
 <template>
   <div id="app">
     <transition :name="transitionName">
-      <router-view class="router-view"/>
+      <!-- keep-alive 包裹动态组件时会缓存不活动的组件实例，而不是销毁 -->
+      <!-- created 函数调用时将需要缓存的 VNode 保存在 this.cache 中，在 render (页面渲染)时，如果 VNode 的 name 符合缓存条件，就从 this.cache 中去除之前缓存的 VNode 实例进行渲染 -->
+      <!-- 可以通过 include 和 exclude 属性记录组件名来控制哪些组件被缓存，属性值是字符串或正则表达式 -->
+      <keep-alive :include="includedComponents">
+        <router-view class="router-view"/>
+      </keep-alive>
     </transition>
     <!-- 这里的标签名是下面 components 中的名字，也是 import 的名字，可以直接使用(每个单词首字母大小写需和声明的一致)，或使用 - 分隔单词(可将大写改小写，反之不行) -->
     <nav-bar v-if="isShowNav"></nav-bar>
@@ -36,6 +41,12 @@
         } else { // 同级无过渡动画
           this.transitionName = ''
         }
+      }
+    },
+    // 实时监控和更新需要被缓存的组件名列表
+    computed: {
+      includedComponents() {
+        return this.$store.state.includedComponents // 将需要被缓存的组件名列表存在全局状态 state 中
       }
     }
   }

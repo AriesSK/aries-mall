@@ -40,7 +40,9 @@
 
 <script>
   import { search } from '../service/good'
+
   export default {
+    name: 'productList',
     data() {
       return {
         // 初始的 keyword 通过路由传参中获取，或者为空，之后从输入框中获取
@@ -58,7 +60,8 @@
       }
     },
     mounted() {
-
+      // 缓存该组件
+      this.$store.commit('includedComponents', ['productList'])
     },
     methods: {
       async init() {
@@ -128,7 +131,35 @@
         this.orderBy = name // 通过 tabbar 标签名排序
         this.onRefresh()
       }
+    },
+    // 三种导航守卫： beforeRouteEnter、beforeRouteUpdate、beforeRouteLeave，其中 this 在 第一个守卫中无法获取，因为组件实例还未被创建
+    // 三个参数：to 跳转到的页面，from 从哪个页面跳转过来，next 下一步（若参数为 false 则停留在本页面）
+    beforeRouteLeave(to, from, next) {
+      // 如果跳转商品详情页面，则保持缓存直接跳转，保证从详情页返回时商品列表存在
+      // 如果跳转别的页面，则清空缓存，让组件被销毁，保证再次进入时是初始状态
+      if (to.name == 'product') {
+        next()
+      } else {
+        this.$store.commit('includedComponents', [])
+        next()
+      }
+    },
+    // 下面两个生命周期函数只有在被 keep-alive 包裹时才会被调用
+    // 在 keep-alive 组件激活时调用，如果需要获取新数据则在该生命周期函数中获取，承担原先 created 的任务
+    activated() {
+      // console.log('activated')
+    },
+    // 在 keep-alive 组件停用时调用
+    deactivated() {
+      // console.log('deactivated')
     }
+    /**
+     * 实现从商品详情返回 productList 时商品列表缓存
+     * 从其他页面进入 productList，执行 created、mounted 等钩子函数，执行 mounted 时将该组件加入 keep-alive 中实现缓存
+     * 在离开该组件时，如果进入商品详情，则维持缓存；若进入其他组件，则清空缓存
+     * 从商品详情返回 productList，因为被 keep-alive 包裹，不执行 created、mounted 等钩子函数
+     * 再从其他界面进入 productList，重复上述过程
+     */ 
   }
 </script>
 

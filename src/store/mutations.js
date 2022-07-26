@@ -4,5 +4,9 @@ export default {
   addCart(state, payload) {
     // 修改 state，将其中的购物车数量设置为载荷中的数量
     state.cartCount = payload.count
+  },
+  // 修改需要缓存的组件名
+  includedComponents(state, data) {
+    state.includedComponents = data
   }
 }
