@@ -27,5 +27,5 @@ export function modifyCart(params) {
 }
 
 export function getByCartItemIds(params) {
-  return axios.get('/shop-cart/settle', {params})
+  return axios.get('/shop-cart/settle', { params })
 }

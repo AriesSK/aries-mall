@@ -22,6 +22,7 @@ const routes = [
   {
     path: '/category',
     name: 'category',
+    // 路由懒加载 借助 webpack 的 import() 实现异步组件 并且通过注释实现 webpack 代码分块
     component: () => import(/* webpackChunkName: "about" */ '../views/Category.vue'),
     meta: {
       index: 1
@@ -68,6 +69,8 @@ const routes = [
     }
   },
   {
+    // 动态路由：将给定匹配模式的路由映射到同一个组件
+    // :id 表示路径参数，在组件中通过 this.$route.params 获取
     path: '/product/:id',
     name: 'product',
     component: () => import(/* webpackChunkName: "product" */ '../views/ProductDetail.vue'),

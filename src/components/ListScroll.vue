@@ -1,10 +1,10 @@
 <template>
   <!-- 
     ref 是 vue 自带的获取 DOM 和组件的方法
-    给 DOM 节点加上 ref 属性相当于起了名，在 $ref 属性中多了这个元素的引用，可以通过 vue 的实例 this.$ref.name 获取这个 DOM
-    给组件加上 ref 属性相当于起了名，在 $ref 属性中多了这个组件的引用，可以通过 this.$ref.name.变量名(方法名) 获取这个组件的变量或方法
+    给 DOM 节点加上 ref 属性相当于起了名，在 $ref 属性中多了这个元素的引用，可以通过 vue 的实例 this.$refs.name 获取这个 DOM
+    给组件加上 ref 属性相当于起了名，在 $ref 属性中多了这个组件的引用，可以通过 this.$refs.name.变量名(方法名) 获取这个组件的变量或方法
    -->
-  <!-- 滚动组件以容器的形式导出，组件内部内容以 solt 插槽的新式展示，插槽是 Vue 提出的概念，用于决定将所携带的内容，插入到指定的某个位置-->
+  <!-- 滚动组件以容器的形式导出，组件内部内容以 solt 插槽的形式展示，插槽是 Vue 提出的概念，用于决定将所携带的内容，插入到指定的某个位置-->
   <div ref="wrapper" class="scroll-wrapper">
     <slot></slot>
   </div>
@@ -72,7 +72,7 @@
        * 然而这里虽然使用了异步调用，但还是没法保证 better-scroll 的正确滚动
        * 这是因为父组件与子组件的生命周期执行顺序是*父 created - 父 beforeMounted - 子 created - 子 beforeMounted - 子 mounted - 父 mounted*
        * 因此在 better-scroll 完成初始化后，父组件中又会调用接口获取数据改变 content 的内容和高度，也改变了 DOM 结构，导致无法正确滚动
-       * 因此需要利用 update 和 scroll.refresh 重新计算
+       * 因此需要利用 updated 和 scroll.refresh 重新计算
        */ 
       this.$nextTick(() => {
         this.initScroll()

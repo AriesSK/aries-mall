@@ -2,7 +2,7 @@
   <div id="app">
     <transition :name="transitionName">
       <!-- keep-alive 包裹动态组件时会缓存不活动的组件实例，而不是销毁 -->
-      <!-- created 函数调用时将需要缓存的 VNode 保存在 this.cache 中，在 render (页面渲染)时，如果 VNode 的 name 符合缓存条件，就从 this.cache 中去除之前缓存的 VNode 实例进行渲染 -->
+      <!-- created 函数调用时将需要缓存的 VNode 保存在 this.cache 中，在 render (页面渲染)时，如果 VNode 的 name 符合缓存条件，就从 this.cache 中取出之前缓存的 VNode 实例进行渲染 -->
       <!-- 可以通过 include 和 exclude 属性记录组件名来控制哪些组件被缓存，属性值是字符串或正则表达式 -->
       <keep-alive :include="includedComponents">
         <router-view class="router-view"/>

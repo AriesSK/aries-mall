@@ -1,4 +1,4 @@
-// action 和 mutation 类似，但 action 是通过提交 mutation 来修改 action 的，而不是直接修改，并且 action 有异步能力，调用 action 通过执行 this.$store.dispatch()
+// action 和 mutation 类似，但 action 是通过提交 mutation 来修改 state 的，而不是直接修改，并且 action 有异步能力，调用 action 通过执行 this.$store.dispatch()
 import { getCart } from '../service/cart'
 
 // Vuex 的异步请求能力，请求异步数据后触发状态更新
