@@ -18,5 +18,6 @@ new Vue({
 }).$mount('#app')
 
 Vue.prototype.$md5 = md5
+
 // 注册 router
 window.vRouter = router

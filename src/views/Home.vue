@@ -38,6 +38,7 @@
     </div>
     <div class="good">
       <header class="good-header">新品上线</header>
+      <!-- <button @click="sayHello" v-throttle>提交</button> -->
       <div class="good-box">
         <div class="good-item" v-for="item in newGoodses" :key="item.goodsId" @click="goToDetail(item)">
           <img :src="item.goodsCoverImg"/>
@@ -81,6 +82,37 @@
   import swiper from '@/components/Swiper'
   import { getHome } from '@/service/home'
   import { Toast } from 'vant'
+  import Vue from 'vue'
+  /**
+   * el 代表指令绑定的元素，可以用来直接操作 DOM
+   * binding 包含一些 property
+   *  name 指令名
+   *  value 指令绑定的值
+   *  oldValue 指令绑定的前一个值
+   *  expression 字符串形式的指令表达式
+   *  arg 传给指令的参数
+   *  modifiers 包含修饰符的对象
+   *  vnode 虚拟节点
+   *  oldVnode 上一个虚拟节点
+   */
+  Vue.directive('throttle', {
+    bind: (el, binding) => {
+      // 防抖时间
+      let throttleTime = binding.value;
+      // 默认防抖时间
+      if (!throttleTime) throttleTime = 2000;
+      let flag;
+      el.addEventListener('click', event => {
+        if (!flag) {
+          flag = setTimeout(() => {
+            flag = null;
+          }, throttleTime);
+        } else {
+          event && event.stopImmediatePropagation();
+        }
+      }, true);
+    }
+  })
   export default {
     // 设置一个全局 id
     name: 'Home',
@@ -181,7 +213,10 @@
       },
       goToDetail(item) {
         this.$router.push({ path: `product/${item.goodsId}` })
-      }
+      },
+      // sayHello() {
+      //   console.log('hello');
+      // }
     }
   }
 </script>
